@@ -3,6 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema.js"
 import _db from "./_db.js";
 
+// resolvers
 const resolvers = {
     Query: {
       games() {
@@ -23,7 +24,25 @@ const resolvers = {
       review(_, args) {
         return db.reviews.find((review) => review.id === args.id)
       }
-    }
+    },
+    Game: {
+      reviews(parent) {
+        return db.reviews.filter((r) => r.game_id === parent.id)
+      }
+    },
+    Review: {
+      author(parent) {
+        return db.authors.find((a) => a.id === parent.author_id)
+      },
+      game(parent) {
+        return db.games.find((g) => g.id === parent.game_id)
+      }
+    },
+    Author: {
+      reviews(parent) {
+        return db.reviews.filter((r) => r.author_id === parent.id)
+      }
+    },
   }
 
 //server setup
